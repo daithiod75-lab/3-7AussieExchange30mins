@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meishu Hitachi & Burnside State High Cultural Exchange Workbook</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        }
+        .tab-btn.active {
+            border-bottom: 3px solid #2563eb;
+            color: #2563eb;
+            font-weight: 600;
+        }
+        /* Custom scrollbar for textareas */
+        textarea::-webkit-scrollbar {
+            width: 6px;
+        }
+        textarea::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        /* Dedicated Print Worksheet Styling */
+        @media print {
+            header, nav, footer, .no-print, #status-message, .interactive-only {
+                display: none !important;
+            }
+            body {
+                background: white !important;
+                color: black !important;
+                font-size: 11pt;
+            }
+            .print-container {
+                display: block !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .worksheet-page {
+                page-break-after: always;
+                padding: 20px;
+                border: 1px solid #ccc;
+                margin-bottom: 20px;
+            }
+            .worksheet-page:last-child {
+                page-break-after: avoid;
+            }
+            textarea {
+                border: 1px solid #94a3b8 !important;
+                background-color: #fff !important;
+                min-height: 80px !important;
+                resize: none !important;
+            }
+            .print-lines {
+                border-bottom: 1px dashed #94a3b8;
+                height: 24px;
+                margin-top: 8px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <header class="bg-gradient-to-r from-blue-900 via-indigo-900 to-emerald-900 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <span class="text-xs uppercase tracking-widest text-amber-300 font-semibold flex items-center gap-1.5">
+                    <i class="fa-solid fa-handshake"></i>
+                    <span>Meishu Gakuen Hitachi High School 🇯🇵 &amp; Burnside State High School 🇦🇺</span>
+                </span>
+                <h1 class="text-xl md:text-2xl font-bold flex items-center gap-2 mt-0.5">
+                    <span>🇦🇺 🇯🇵 <span class="lang-en">Japan-Australia Cultural Exchange Hub</span><span class="lang-ja hidden">日豪文化交流 準備ワークブック</span></span>
+                </h1>
+                <p class="text-xs text-indigo-200 mt-1">
+                    <span class="lang-en">Interactive Notes & Printable Worksheets for Group Discussions</span>
+                    <span class="lang-ja hidden">明秀日立 × バーンサイド校 交流会用 インタラクティブ準備・印刷用ワークシート</span>
+                </p>
+            </div>
+            
+            <div class="flex items-center gap-2 md:gap-3 flex-wrap">
+                <!-- Language Toggle Button -->
+                <button onclick="toggleLanguage()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 text-xs md:text-sm px-3 py-2 rounded-lg font-bold transition flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-language text-base"></i>
+                    <span id="lang-btn-text">日本語に切り替え</span>
+                </button>
+
+                <!-- Save Button -->
+                <button onclick="saveAllNotes()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs md:text-sm px-3 py-2 rounded-lg font-medium transition flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-floppy-disk"></i> 
+                    <span class="lang-en">Save Notes</span>
+                    <span class="lang-ja hidden">メモを保存</span>
+                </button>
+                
+                <!-- Print Worksheets Button -->
+                <button onclick="triggerWorksheetPrint()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs md:text-sm px-3 py-2 rounded-lg font-medium transition flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-print"></i> 
+                    <span class="lang-en">Print Worksheets</span>
+                    <span class="lang-ja hidden">ワークシート印刷</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="bg-white border-b border-slate-200 shadow-sm sticky top-[73px] z-40">
+        <div class="max-w-6xl mx-auto px-4 flex overflow-x-auto gap-2 md:gap-6">
+            <button onclick="switchTab('guidance')" id="tab-guidance" class="tab-btn active py-3 px-3 text-xs md:text-sm flex items-center gap-2 whitespace-nowrap">
+                <i class="fa-solid fa-lightbulb text-amber-500"></i> 
+                <span class="lang-en">Exchange Advice</span>
+                <span class="lang-ja hidden">交流アドバイス</span>
+            </button>
+            <button onclick="switchTab('education')" id="tab-education" class="tab-btn py-3 px-3 text-xs md:text-sm flex items-center gap-2 whitespace-nowrap">
+                <i class="fa-solid fa-graduation-cap text-blue-500"></i> 
+                <span class="lang-en">Topic 1: Education</span>
+                <span class="lang-ja hidden">トピック1: 教育・学校生活</span>
+            </button>
+            <button onclick="switchTab('environment')" id="tab-environment" class="tab-btn py-3 px-3 text-xs md:text-sm flex items-center gap-2 whitespace-nowrap">
+                <i class="fa-solid fa-leaf text-emerald-500"></i> 
+                <span class="lang-en">Topic 2: Environment</span>
+                <span class="lang-ja hidden">トピック2: 環境問題・意識</span>
+            </button>
+            <button onclick="switchTab('hobbies')" id="tab-hobbies" class="tab-btn py-3 px-3 text-xs md:text-sm flex items-center gap-2 whitespace-nowrap">
+                <i class="fa-solid fa-gamepad text-purple-500"></i> 
+                <span class="lang-en">Topic 3: Hobbies & Culture</span>
+                <span class="lang-ja hidden">トピック3: 趣味・カルチャー</span>
+            </button>
+            <button onclick="switchTab('cheatsheet')" id="tab-cheatsheet" class="tab-btn py-3 px-3 text-xs md:text-sm flex items-center gap-2 whitespace-nowrap">
+                <i class="fa-solid fa-comments text-indigo-500"></i> 
+                <span class="lang-en">Phrases Cheat Sheet</span>
+                <span class="lang-ja hidden">英会話即効フレーズ</span>
+            </button>
+            <button onclick="switchTab('printview')" id="tab-printview" class="tab-btn py-3 px-3 text-xs md:text-sm flex items-center gap-2 whitespace-nowrap text-blue-600 font-semibold">
+                <i class="fa-solid fa-file-pdf text-red-500"></i> 
+                <span class="lang-en">Worksheet Preview</span>
+                <span class="lang-ja hidden">印刷プレビュー</span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full">
+
+        <!-- Status Notification Banner -->
+        <div id="status-message" class="hidden mb-4 p-3 rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-300 text-xs md:text-sm flex items-center justify-between">
+            <span class="flex items-center gap-2"><i class="fa-solid fa-circle-check"></i> <span id="status-text">Notes saved!</span></span>
+            <button onclick="dismissStatus()" class="text-emerald-800 font-bold">&times;</button>
+        </div>
+
+        <!-- GUIDANCE SECTION -->
+        <section id="content-guidance" class="space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-indigo-900 border-b pb-3 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-earth-oceania text-emerald-600"></i> 
+                    <span class="lang-en">Preparing for Meishu Hitachi &amp; Burnside State High Exchange</span>
+                    <span class="lang-ja hidden">明秀日立 × バーンサイド高校 交流会に向けたアドバイス</span>
+                </h2>
+                
+                <div class="grid md:grid-cols-2 gap-6 text-sm">
+                    <div class="space-y-4">
+                        <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r">
+                            <p class="font-bold text-amber-900 flex items-center gap-2">
+                                <i class="fa-solid fa-heart"></i>
+                                <span class="lang-en">Friendly Exchange Mindset</span>
+                                <span class="lang-ja hidden">交流を100%楽しむためのマインドセット</span>
+                            </p>
+                            <p class="text-slate-700 text-xs mt-2 leading-relaxed">
+                                <span class="lang-en">Burnside State High School students in Sunshine Coast, Queensland are excited to connect with Meishu Hitachi students! Don't worry about perfect grammar. Speak naturally, ask questions, and share your unique Hitachi and Japanese high school experiences!</span>
+                                <span class="lang-ja hidden">オーストラリア・サンシャインコーストにあるバーンサイド高校の皆さんは、明秀日立の皆さんとの交流を心待ちにしています！文法を気にしすぎず、茨城や日本の高校生活、あなたの好きなことを笑顔で伝えましょう！</span>
+                            </p>
+                        </div>
+
+                        <div class="space-y-3">
+                            <h3 class="font-bold text-indigo-800 text-base border-b pb-1">
+                                <span class="lang-en">Four Key Strategies for Success:</span>
+                                <span class="lang-ja hidden">交流を盛り上げる4つのポイント：</span>
+                            </h3>
+
+                            <div class="flex items-start gap-3 bg-slate-50 p-3 rounded-lg border">
+                                <div class="bg-indigo-100 text-indigo-700 font-bold p-2 rounded text-xs shrink-0">01</div>
+                                <div class="text-xs text-slate-700">
+                                    <strong class="text-slate-900 block font-semibold mb-0.5">
+                                        <span class="lang-en">Prepare Notes or Print Worksheets</span>
+                                        <span class="lang-ja hidden">事前にメモを作成（または紙を印刷）</span>
+                                    </strong>
+                                    <span class="lang-en">Use this app to fill out your thoughts or click "Print Worksheets" to have physical paper for taking group notes and reading prompts aloud.</span>
+                                    <span class="lang-ja hidden">アプリに事前に入力しておくか、「ワークシート印刷」で印刷して紙のプリントとして持ち歩き、グループワーク時に音読・手書きメモに活用できます。</span>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-3 bg-slate-50 p-3 rounded-lg border">
+                                <div class="bg-indigo-100 text-indigo-700 font-bold p-2 rounded text-xs shrink-0">02</div>
+                                <div class="text-xs text-slate-700">
+                                    <strong class="text-slate-900 block font-semibold mb-0.5">
+                                        <span class="lang-en">Show Physical Props & Visuals</span>
+                                        <span class="lang-ja hidden">実物（プロップ）をカメラで見せる</span>
+                                    </strong>
+                                    <span class="lang-en">Show your school uniform, club gear, eco bottle, Bento box, or photos of Hitachi city (Kamine Park, Pacific Ocean)!</span>
+                                    <span class="lang-ja hidden">制服のネクタイ、部活のユニフォーム、お弁当箱、かみね公園や日立の海の写真を見せると盛り上がります！</span>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-3 bg-slate-50 p-3 rounded-lg border">
+                                <div class="bg-indigo-100 text-indigo-700 font-bold p-2 rounded text-xs shrink-0">03</div>
+                                <div class="text-xs text-slate-700">
+                                    <strong class="text-slate-900 block font-semibold mb-0.5">
+                                        <span class="lang-en">Use the Clear "PREP" Model</span>
+                                        <span class="lang-ja hidden">PREP法（結論・理由・具体例）で話す</span>
+                                    </strong>
+                                    <span class="lang-en">Point &rarr; Reason &rarr; Example &rarr; Point. Keep sentences clear and structured.</span>
+                                    <span class="lang-ja hidden">Point（結論）&rarr; Reason（理由）&rarr; Example（具体例）&rarr; Point（まとめ）の順で整理すると英語が伝わりやすくなります。</span>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-3 bg-slate-50 p-3 rounded-lg border">
+                                <div class="bg-indigo-100 text-indigo-700 font-bold p-2 rounded text-xs shrink-0">04</div>
+                                <div class="text-xs text-slate-700">
+                                    <strong class="text-slate-900 block font-semibold mb-0.5">
+                                        <span class="lang-en">Active Australian Interactions</span>
+                                        <span class="lang-ja hidden">オーストラリアらしいフレーズに反応</span>
+                                    </strong>
+                                    <span class="lang-en">Australian students love relaxed greetings like <em>"G'day!"</em> and <em>"No worries!"</em>. Try using them back!</span>
+                                    <span class="lang-ja hidden">豪州の生徒は "G'day!" や "No worries!" といった言葉をよく使います。笑顔で使ってみましょう！</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recommended Schedule Timeline -->
+                    <div class="space-y-4">
+                        <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-xl">
+                            <h3 class="font-bold text-indigo-900 text-sm mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-clock text-indigo-600"></i>
+                                <span class="lang-en">Suggested 35-Minute Session Flow</span>
+                                <span class="lang-ja hidden">おすすめの35分交流セッションの流れ</span>
+                            </h3>
+
+                            <div class="space-y-3 text-xs">
+                                <div class="bg-white p-3 rounded-lg border flex gap-3 items-center">
+                                    <span class="bg-indigo-600 text-white font-bold px-2.5 py-1 rounded shrink-0">00-05m</span>
+                                    <div>
+                                        <strong class="block text-slate-800">Icebreaker &amp; Self Introductions</strong>
+                                        <span class="text-slate-500">Names, grades, Meishu vs. Burnside greeting. / 自己紹介と挨拶</span>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white p-3 rounded-lg border flex gap-3 items-center">
+                                    <span class="bg-blue-600 text-white font-bold px-2.5 py-1 rounded shrink-0">05-15m</span>
+                                    <div>
+                                        <strong class="block text-slate-800">Topic 1: Education System &amp; School Life</strong>
+                                        <span class="text-slate-500">Class schedule, uniforms, Bukatsu, school lunch. / 学校生活</span>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white p-3 rounded-lg border flex gap-3 items-center">
+                                    <span class="bg-emerald-600 text-white font-bold px-2.5 py-1 rounded shrink-0">15-25m</span>
+                                    <div>
+                                        <strong class="block text-slate-800">Topic 2: Environmental Awareness</strong>
+                                        <span class="text-slate-500">Recycling, plastic waste, coastal cleanups, Mottainai. / 環境活動</span>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white p-3 rounded-lg border flex gap-3 items-center">
+                                    <span class="bg-purple-600 text-white font-bold px-2.5 py-1 rounded shrink-0">25-32m</span>
+                                    <div>
+                                        <strong class="block text-slate-800">Topic 3: Hobbies &amp; Teen Culture</strong>
+                                        <span class="text-slate-500">Anime, music, sports, wildlife &amp; quick questions. / 趣味・文化</span>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white p-3 rounded-lg border flex gap-3 items-center">
+                                    <span class="bg-amber-600 text-white font-bold px-2.5 py-1 rounded shrink-0">32-35m</span>
+                                    <div>
+                                        <strong class="block text-slate-800">Closing Remarks &amp; Group Photo</strong>
+                                        <span class="text-slate-500">Group photo &amp; final greetings. / 終わりの挨拶と記念撮影</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border p-4 rounded-xl bg-slate-50 text-xs space-y-2">
+                            <p class="font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-toolbox"></i>
+                                <span class="lang-en">Recommended Props for Meishu Students:</span>
+                                <span class="lang-ja hidden">手元に用意しておくと良いおすすめアイテム：</span>
+                            </p>
+                            <ul class="list-disc pl-5 text-slate-600 space-y-1">
+                                <li><span class="lang-en">Meishu Hitachi school badge, uniform tie, or club sports jersey</span><span class="lang-ja hidden">明秀日立の校章、ネクタイ、部活動のユニフォーム</span></li>
+                                <li><span class="lang-en">Your Bento box or reusable water bottle ("My Bottle")</span><span class="lang-ja hidden">愛用のお弁当箱やマイボトル</span></li>
+                                <li><span class="lang-en">Printed Topic 1, 2, 3 Worksheets (using the Print button above)</span><span class="lang-ja hidden">印刷したトピック1〜3のワークシート</span></li>
+                                <li><span class="lang-en">Photos of Hitachi City, Pacific Ocean, or local festivals</span><span class="lang-ja hidden">日立市の海や日立風流物、かみね公園などの写真</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOPIC 1: EDUCATION -->
+        <section id="content-education" class="space-y-6 hidden">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <div class="flex items-center justify-between border-b pb-4 mb-6 flex-wrap gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-blue-100 p-3 rounded-lg text-blue-600">
+                            <i class="fa-solid fa-graduation-cap text-2xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">
+                                <span class="lang-en">Topic 1: Education System &amp; School Life</span>
+                                <span class="lang-ja hidden">トピック1: 教育・学校生活</span>
+                            </h2>
+                            <p class="text-xs text-slate-500">
+                                <span class="lang-en">Compare Japanese high school routines at Meishu Hitachi with Burnside State High School in Australia!</span>
+                                <span class="lang-ja hidden">明秀日立高校とオーストラリア・バーンサイド高校の日常や校風を比較しましょう！</span>
+                            </p>
+                        </div>
+                    </div>
+                    <button onclick="triggerWorksheetPrint()" class="no-print text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 rounded-lg border border-blue-300 font-medium flex items-center gap-1.5">
+                        <i class="fa-solid fa-print"></i>
+                        <span class="lang-en">Print Worksheet 1</span>
+                        <span class="lang-ja hidden">トピック1を印刷</span>
+                    </button>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <!-- Questions & Sub-questions Input Fields -->
+                    <div class="space-y-6">
+                        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2 border-b pb-2">
+                            <i class="fa-solid fa-pen-to-square text-blue-500"></i>
+                            <span class="lang-en">Questions for Notes &amp; Discussion</span>
+                            <span class="lang-ja hidden">サブ質問とあなたの回答準備メモ</span>
+                        </h3>
+
+                        <!-- Question Group 1 -->
+                        <div class="bg-slate-50 border rounded-xl p-4 space-y-4">
+                            <h4 class="font-bold text-xs text-blue-900 uppercase tracking-wide">1. Daily Schedule &amp; Commute</h4>
+                            
+                            <div class="space-y-1.5">
+                                <label for="edu-sub-1a" class="block text-xs font-semibold text-slate-700">
+                                    <span class="block">1a. How do you travel to Meishu Hitachi (train, bus, bike)? What time does your day start and end?</span>
+                                    <span class="block text-[11px] font-normal text-slate-500 mt-0.5">（日本語訳: 明秀日立までどうやって通学していますか？【電車・バス・自転車など】何時始まりで何時終わりますか？）</span>
+                                </label>
+                                <textarea id="edu-sub-1a" oninput="saveNote('edu-sub-1a')" placeholder="Type your answer in English here..." class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none h-16 bg-white"></textarea>
+                            </div>
+
+                            <div class="space-y-1.5">
+                                <label for="edu-sub-1b" class="block text-xs font-semibold text-slate-700">
+                                    <span class="block">1b. How many classes do you have each day? What is your favorite subject and why?</span>
+                                    <span class="block text-[11px] font-normal text-slate-500 mt-0.5">（日本語訳: 1日何コマ授業がありますか？一番好きな教科とその理由は何ですか？）</span>
+                                </label>
+                                <textarea id="edu-sub-1b" oninput="saveNote('edu-sub-1b')" placeholder="Type your answer in English here..." class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none h-16 bg-white"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Question Group 2 -->
+                        <div class="bg-slate-50 border rounded-xl p-4 space-y-4">
+                            <h4 class="font-bold text-xs text-blue-900 uppercase tracking-wide">2. Lunch &amp; Classroom Cleaning (Osoji)</h4>
+                            
+                            <div class="space-y-1.5">
+                                <label for="edu-sub-2a" class="block text-xs font-semibold text-slate-700">
+                                    <span class="block">2a. What do you eat for lunch at school (Bento, cafeteria, convenience store)? What do Australian students eat?</span>
+                                    <span class="block text-[11px] font-normal text-slate-500 mt-0.5">（日本語訳: お昼ご飯には何を食べますか【お弁当・学食・コンビニなど】？オーストラリアの生徒は何を食べていると思いますか？）</span>
+                                </label>
+                                <textarea id="edu-sub-2a" oninput="saveNote('edu-sub-2a')" placeholder="Type your answer in English here..." class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none h-16 bg-white"></textarea>
+                            </div>
+
+                            <div class="space-y-1.5">
+                                <label for="edu-sub-2b" class="block text-xs font-semibold text-slate-700">
+                                    <span class="block">2b. How do Japanese students clean their own school (Osoji)? Did you know Australian schools hire cleaners?</span>
+                                    <span class="block text-[11px] font-normal text-slate-500 mt-0.5">（日本語訳: 日本の生徒が行う「掃除の時間」についてどう説明しますか？豪州では業者が清掃することを知っていましたか？）</span>
+                                </label>
+                                <textarea id="edu-sub-2b" oninput="saveNote('edu-sub-2b')" placeholder="Type your answer in English here..." class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none h-16 bg-white"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Question Group 3 -->
+                        <div class="bg-slate-50 border rounded-xl p-4 space-y-4">
+                            <h4 class="font-bold text-xs text-blue-900 uppercase tracking-wide">3. Club Activities (Bukatsu) &amp; School Events</h4>
+                            
+                            <div class="space-y-1.5">
+                                <label for="edu-sub-3a" class="block text-xs font-semibold text-slate-700">
+                                    <span class="block">3a. What club (Bukatsu) are you in at Meishu Hitachi? How often do you practice after school?</span>
+                                    <span class="block text-[11px] font-normal text-slate-500 mt-0.5">（日本語訳: 明秀日立で何部【部活動】に所属していますか？放課後どのくらい練習していますか？）</span>
+                                </label>
+                                <textarea id="edu-sub-3a" oninput="saveNote('edu-sub-3a')" placeholder="Type your answer in English here..." class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none h-16 bg-white"></textarea>
+                            </div>
+
+                            <div class="space-y-1.5">
+                                <label for="edu-sub-3b" class="block text-xs font-semibold text-slate-700">
+                                    <span class="block">3b. What is your favorite school event (e.g., Cultural Festival, Sports Festival)?</span>
+                                    <span class="block text-[11px] font-normal text-slate-500 mt-0.5">（日本語訳: 一番好きな学校行事【文化祭、体育祭など】は何ですか？）</span>
+                                </label>
+                                <textarea id="edu-sub-3b" oninput="saveNote('edu-sub-3b')" placeholder="Type your answer in English here..." class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none h-16 bg-white"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Model Answers & Vocabulary Bank -->
+                    <div class="space-y-6">
+                        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2 border-b pb-2">
+                            <i class="fa-solid fa-lightbulb text-amber-500"></i>
+                            <span class="lang-en">Model Answers &amp; Cultural Hints</span>
+                            <span class="lang-ja hidden">模範解答サンプルとオーストラリア知識</span>
+                        </h3>
+
+                        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 text-xs space-y-4">
+                            <div>
+                                <strong class="text-blue-900 font-semibold block mb-1">Model Answer 1: Daily Schedule</strong>
+                                <p class="text-slate-700 italic">"I go to Meishu Hitachi High School by train and walk from Hitachi Station. School starts at 8:30 AM. We have six 50-minute periods every day!"</p>
+                                <p class="text-slate-500 mt-1">（日立駅から歩いて明秀日立に通っています。8時半から始まり、毎日50分授業が6コマあります！）</p>
+                            </div>
+
+                            <div class="border-t border-blue-200 pt-3">
+                                <strong class="text-blue-900 font-semibold block mb-1">Model Answer 2: Cleaning (Osoji) Culture</strong>
+                                <p class="text-slate-700 italic">"In Japan, students clean our own classrooms and hallways for 15 minutes after lunch. It teaches us responsibility and keeps our school clean!"</p>
+                                <p class="text-slate-500 mt-1">（日本では生徒が自分たちで教室を15分間掃除します。責任感が身につきます！）</p>
+                            </div>
+
+                            <div class="border-t border-blue-200 pt-3">
+                                <strong class="text-blue-900 font-semibold block mb-1">Cultural Tip: Burnside High Life</strong>
+                                <p class="text-slate-700 italic">"At Burnside State High School in Queensland, school usually finishes earlier around 3:00 PM. Students bring sandwiches, fruit, or buy meat pies from the school tuckshop!"</p>
+                                <p class="text-slate-500 mt-1">（豪州バーンサイド校では午後3時頃に下校し、ランチにはサンドイッチやミートパイなどを食べます。）</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-100 border rounded-xl p-4">
+                            <h4 class="font-bold text-slate-800 text-xs mb-2 flex items-center gap-1.5">
+                                <i class="fa-solid fa-book text-indigo-600"></i>
+                                <span class="lang-en">Topic 1 Keywords &amp; Vocabulary</span>
+                                <span class="lang-ja hidden">学校生活の便利英語単語</span>
+                            </h4>
+                            <div class="grid grid-cols-2 gap-2 text-xs">
+                                <div class="bg-white p-2 rounded border"><strong>Commute:</strong> 通学する</div>
+                                <div class="bg-white p-2 rounded border"><strong>Periods:</strong> 授業時間コマ</div>
+                                <div class="bg-white p-2 rounded border"><strong>Bento box:</strong> 手作り弁当</div>
+                                <div class="bg-white p-2 rounded border"><strong>Tuckshop:</strong> 豪州校の売店</div>
+                                <div class="bg-white p-2 rounded border"><strong>Club activities:</strong> 部活動</div>
+                                <div class="bg-white p-2 rounded border"><strong>Responsibility:</strong> 責任感</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOPIC 2: ENVIRONMENT -->
+        <section id="content-environment" class="space-y-6 hidden">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <div class="flex items-center justify-between border-b pb-4 mb-6 flex-wrap gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-emerald-100 p-3 rounded-lg text-emerald-600">
+                            <i class="fa-solid fa-leaf text-2xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">
+                                <span class="lang-en">Topic 2: Environmental Awareness &amp; Ocean Protection</span>
+                                <span class="lang-ja hidden">トピック2: 環境問題・海洋保全意識</span>
+                            </h2>
+                            <p class="text-xs text-slate-500">
+                                <span class="lang-en">Hitachi City and Sunshine Coast both love beautiful oceans! Discuss recycling, plastic waste, and 'Mottainai'.</span>
+                                <span class="lang-ja hidden">海に面した日立市とサンシャインコースト共通のテーマ！プラスチック削減や「もったいない」精神について話し合おう。</span>
+                            </p>
+                        </div>
+                    </div>
+                    <button onclick="triggerWorksheetPrint()" class="no-print text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-3 py-1.5 rounded-lg border border-emerald-300 font-medium flex items-center gap-1.5">
+                        <i class="fa-solid fa-print"></i>
+                        <span class="lang-en">Print Worksheet 2</span>
+                        <span class="lang-ja hidden">トピック2を印刷</span>
+                    </button>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <!-- Questions & Sub-questions Input Fields -->
+                    <div class="space-y-6">
+                        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2 border-b pb-2">
+                            <i class="fa-solid fa-pen-to-square text-emerald-500"></i>
+                            <span class="lang-en">Questions for Notes &amp; Discussion</span>
+                            <span class="lang-ja hidden">サブ質問とあなたの回答準備メモ</span>
+                        </h3>
+
+                        <!-- Question Group 1 -->
+                        <div class="bg-slate-50 border rounded-xl p-4 space-y-4">
+                            <h4 class="font-bold text-xs text-emerald-900 uppercase tracking-wide">1. Waste Separation &amp; Ocean Cleanups</h4>
+                            
+                            <div class="space-y-1.5">
+                                <label for="env-sub-1a" class="block text-xs font-semibold text-slate-700">
+                                    <span class="block">1a. How do you separate trash at Meishu Hitachi or at home in Hitachi? (e.g. plastic, cans, burnables)</span>
+                                    <span class="block text-[11px] font-normal text-slate-500 mt-0.5">（日本語訳: 学校や日立市のご自宅でゴミをどのように分別していますか【プラ・缶・可燃ゴミなど】？）</span>
+                                </label>
+                                <textarea id="env-sub-1a" oninput="saveNote('env-sub-1a')" placeholder="Type your answer in English here..." class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:outline-none h-16 bg-white"></textarea>
+                            </div>
+
+                            <div class="space-y-1.5">
+                                <label for="env-sub-1b" class="block text-xs font-semibold text-slate-700">
+                                    <span class="block">1b. Both Hitachi and Sunshine Coast have coastline. Have you ever joined a beach cleanup or picked up trash?</span>
+                                    <span class="block text-[11px] font-normal text-slate-500 mt-0.5">（日本語訳: 日立もサンシャインコーストも海岸線があります。海岸清掃やゴミ拾いをした経験はありますか？）</span>
+                                </label>
+                                <textarea id="env-sub-1b" oninput="saveNote('env-sub-1b')" placeholder="Type your answer in English here..." class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:outline-none h-16 bg-white"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Question Group 2 -->
+                        <div class="bg-slate-50 border rounded-xl p-4 space-y-4">
+                            <h4 class="font-bold text-xs text-emerald-900 uppercase tracking-wide">2. Eco Habits &amp; Plastic Reduction</h4>
+                            
+                            <div class="space-y-1.5">
+                                <label for="env-sub-2a" class="block text-xs font-semibold text-slate-700">
+                                    <span class="block">2a. What daily eco habits do you practice? (e.g. carrying "My Bottle", eco bags, saving electricity)</span>
+                                    <span class="block text-[11px] font-normal text-slate-500 mt-0.5">（日本語訳: 日常で行っているエコ習慣は何ですか【マイボトル、エコバッグ、節電など】？）</span>
+                                </label>
+                                <textarea id="env-sub-2a" oninput="saveNote('env-sub-2a')" placeholder="Type your answer in English here..." class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:outline-none h-16 bg-white"></textarea>
+                            </div>
+
+                            <div class="space-y-1.5">
+                                <label for="env-sub-2b" class="block text-xs font-semibold text-slate-700">
+                                    <span class="block">2b. What do you ask Australian students about solar power or plastic bags in Queensland?</span>
+                                    <span class="block text-[11px] font-normal text-slate-500 mt-0.5">（日本語訳: オーストラリアの太陽光発電やレジ袋制限についてどんな質問をしてみたいですか？）</span>
+                                </label>
+                                <textarea id="env-sub-2b" oninput="saveNote('env-sub-2b')" placeholder="Type your answer in English here..." class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:outline-none h-16 bg-white"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Question Group 3 -->
+                        <div class="bg-slate-50 border rounded-xl p-4 space-y-4">
+                            <h4 class="font-bold text-xs text-emerald-900 uppercase tracking-wide">3. Explaining "MOTTAINAI" to Australian Peers</h4>
+                            
+                            <div class="space-y-1.5">
+                                <label for="env-sub-3a" class="block text-xs font-semibold text-slate-700">
+                                    <span class="block">3a. How would you explain the concept of "Mottainai" in simple English?</span>
+                                    <span class="block text-[11px] font-normal text-slate-500 mt-0.5">（日本語訳: 日本の「もったいない」という概念を簡単な英語でどう説明しますか？）</span>
+                                </label>
+                                <textarea id="env-sub-3a" oninput="saveNote('env-sub-3a')" placeholder="Type your answer in English here..." class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:outline-none h-16 bg-white"></textarea>
+                            </div>
+
+                            <div class="space-y-1.5">
+                                <label for="env-sub-3b" class="block text-xs font-semibold text-slate-700">
+                                    <span class="block">3b. Give a personal example of how you practice "Mottainai" (reusing things, not wasting food).</span>
+                                    <span class="block text-[11px] font-normal text-slate-500 mt-0.5">（日本語訳: 物を大切に使う、食べ残しをしないなど、あなたの「もったいない」の実践例を教えてください。）</span>
+                                </label>
+                                <textarea id="env-sub-3b" oninput="saveNote('env-sub-3b')" placeholder="Type your answer in English here..." class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:outline-none h-16 bg-white"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Model Answers & Vocabulary Bank -->
+                    <div class="space-y-6">
+                        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2 border-b pb-2">
+                            <i class="fa-solid fa-lightbulb text-amber-500"></i>
+                            <span class="lang-en">Model Answers &amp; Useful Hints</span>
+                            <span class="lang-ja hidden">模範解答サンプルとヒント</span>
+                        </h3>
+
+                        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-xs space-y-4">
+                            <div>
+                                <strong class="text-emerald-900 font-semibold block mb-1">Model Answer 1: Ocean &amp; Recycling</strong>
+                                <p class="text-slate-700 italic">"Hitachi City faces the Pacific Ocean, so keeping our beaches clean is very important. At home, we sort plastic, cans, and paper to reduce waste."</p>
+                                <p class="text-slate-500 mt-1">（日立市は太平洋に面しているため、海岸を綺麗に保つことが重要です。プラスチックや缶を分別しています。）</p>
+                            </div>
+
+                            <div class="border-t border-emerald-200 pt-3">
+                                <strong class="text-emerald-900 font-semibold block mb-1">Model Answer 2: Explaining "Mottainai"</strong>
+                                <p class="text-slate-700 italic">"'Mottainai' means 'Don't waste!'. It encourages us to respect resources, reduce, reuse, and recycle everything we can."</p>
+                                <p class="text-slate-500 mt-1">（「もったいない」とは無駄にしない精神で、リデュース・リユース・リサイクルを大切にすることです。）</p>
+                            </div>
+
+                            <div class="border-t border-emerald-200 pt-3">
+                                <strong class="text-emerald-900 font-semibold block mb-1">Australia Focus: Solar &amp; Wildlife</strong>
+                                <p class="text-slate-700 italic">"Australia is famous for solar panels on house roofs and protecting unique wildlife like koalas and sea turtles on the Great Barrier Reef!"</p>
+                                <p class="text-slate-500 mt-1">（オーストラリアは屋根の太陽光パネルや、コアラ・ウミガメなどの自然保護活動でも有名です！）</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-100 border rounded-xl p-4">
+                            <h4 class="font-bold text-slate-800 text-xs mb-2 flex items-center gap-1.5">
+                                <i class="fa-solid fa-book text-emerald-600"></i>
+                                <span class="lang-en">Topic 2 Keywords &amp; Vocabulary</span>
+                                <span class="lang-ja hidden">環境問題の英語単語集</span>
+                            </h4>
+                            <div class="grid grid-cols-2 gap-2 text-xs">
+                                <div class="bg-white p-2 rounded border"><strong>Coastline:</strong> 海岸線</div>
+                                <div class="bg-white p-2 rounded border"><strong>Beach cleanup:</strong> 海岸清掃</div>
+                                <div class="bg-white p-2 rounded border"><strong>Single-use plastic:</strong> 使い捨てプラ</div>
+                                <div class="bg-white p-2 rounded border"><strong>Reusable bottle:</strong> マイボトル</div>
+                                <div class="bg-white p-2 rounded border"><strong>Renewable energy:</strong> 再生可能エネルギー</div>
+                                <div class="bg-white p-2 rounded border"><strong>Conserve nature:</strong> 自然を保護する</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOPIC 3: HOBBIES & TEEN CULTURE -->
+        <section id="content-hobbies" class="space-y-6 hidden">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <div class="flex items-center justify-between border-b pb-4 mb-6 flex-wrap gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-purple-100 p-3 rounded-lg text-purple-600">
+                            <i class="fa-solid fa-gamepad text-2xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">
+                                <span class="lang-en">Topic 3: Hobbies, Anime &amp; Teen Culture</span>
+                                <span class="lang-ja hidden">トピック3: 趣味・アニメ・ティーンカルチャー</span>
+                            </h2>
+                            <p class="text-xs text-slate-500">
+                                <span class="lang-en">Share Japanese anime, manga, J-Pop, and learn about Australian sports, surfing, food, and music!</span>
+                                <span class="lang-ja hidden">アニメ・漫画・J-POPを紹介し、豪州のスポーツ（ラグビー・AFL）、サーフィン、オージーの食べ物について聞こう！</span>
+                            </p>
+                        </div>
+                    </div>
+                    <button onclick="triggerWorksheetPrint()" class="no-print text-xs bg-purple-50 hover:bg-purple-100 text-purple-700 px-3 py-1.5 rounded-lg border border-purple-300 font-medium flex items-center gap-1.5">
+                        <i class="fa-solid fa-print"></i>
+                        <span class="lang-en">Print Worksheet 3</span>
+                        <span class="lang-ja hidden">トピック3を印刷</span>
+                    </button>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <!-- Questions & Sub-questions Input Fields -->
+                    <div class="space-y-6">
+                        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2 border-b pb-2">
+                            <i class="fa-solid fa-pen-to-square text-purple-500"></i>
+                            <span class="lang-en">Questions for Notes &amp; Discussion</span>
+                            <span class="lang-ja hidden">サブ質問とあなたの回答準備メモ</span>
+                        </h3>
+
+                        <!-- Question Group 1 -->
+                        <div class="bg-slate-50 border rounded-xl p-4 space-y-4">
+                            <h4 class="font-bold text-xs text-purple-900 uppercase tracking-wide">1. Free Time &amp; Weekend Life</h4>
+                            
+                            <div class="space-y-1.5">
+                                <label for="hob-sub-1a" class="block text-xs font-semibold text-slate-700">
+                                    <span class="block">1a. What do you like to do on weekends in Ibaraki/Hitachi? (e.g. shopping, sports, gaming, beach)</span>
+                                    <span class="block text-[11px] font-normal text-slate-500 mt-0.5">（日本語訳: 茨城・日立で週末はどんなことをして過ごすのが好きですか？）</span>
+                                </label>
+                                <textarea id="hob-sub-1a" oninput="saveNote('hob-sub-1a')" placeholder="Type your answer in English here..." class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none h-16 bg-white"></textarea>
+                            </div>
+
+                            <div class="space-y-1.5">
+                                <label for="hob-sub-1b" class="block text-xs font-semibold text-slate-700">
+                                    <span class="block">1b. What music artist or J-Pop group do you listen to most?</span>
+                                    <span class="block text-[11px] font-normal text-slate-500 mt-0.5">（日本語訳: 一番よく聴く日本の音楽アーティストやJ-POPグループは誰ですか？）</span>
+                                </label>
+                                <textarea id="hob-sub-1b" oninput="saveNote('hob-sub-1b')" placeholder="Type your answer in English here..." class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none h-16 bg-white"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Question Group 2 -->
+                        <div class="bg-slate-50 border rounded-xl p-4 space-y-4">
+                            <h4 class="font-bold text-xs text-purple-900 uppercase tracking-wide">2. Anime, Manga &amp; Japanese Culture</h4>
+                            
+                            <div class="space-y-1.5">
+                                <label for="hob-sub-2a" class="block text-xs font-semibold text-slate-700">
+                                    <span class="block">2a. What anime, manga, or game would you recommend to a student from Burnside High?</span>
+                                    <span class="block text-[11px] font-normal text-slate-500 mt-0.5">（日本語訳: バーンサイド高校の生徒におすすめしたいアニメ、漫画、ゲームは何ですか？）</span>
+                                </label>
+                                <textarea id="hob-sub-2a" oninput="saveNote('hob-sub-2a')" placeholder="Type your answer in English here..." class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none h-16 bg-white"></textarea>
+                            </div>
+
+                            <div class="space-y-1.5">
+                                <label for="hob-sub-2b" class="block text-xs font-semibold text-slate-700">
+                                    <span class="block">2b. Why do you like this anime or manga? How would you describe the story briefly?</span>
+                                    <span class="block text-[11px] font-normal text-slate-500 mt-0.5">（日本語訳: なぜその作品が好きですか？ストーリーを簡単に説明すると？）</span>
+                                </label>
+                                <textarea id="hob-sub-2b" oninput="saveNote('hob-sub-2b')" placeholder="Type your answer in English here..." class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none h-16 bg-white"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Question Group 3 -->
+                        <div class="bg-slate-50 border rounded-xl p-4 space-y-4">
+                            <h4 class="font-bold text-xs text-purple-900 uppercase tracking-wide">3. Australian Culture &amp; Food</h4>
+                            
+                            <div class="space-y-1.5">
+                                <label for="hob-sub-3a" class="block text-xs font-semibold text-slate-700">
+                                    <span class="block">3a. Australia is famous for Koalas, Kangaroos, Surfing, and Aussie Rules Football (AFL)? Which of these is your favorite, and why?</span>
+                                    <span class="block text-[11px] font-normal text-slate-500 mt-0.5">（日本語訳: オーストラリアはコアラ、カンガルー、サーフィン、豪州フットボール【AFL】で有名です。どれが一番好きですか？その理由は？）</span>
+                                </label>
+                                <textarea id="hob-sub-3a" oninput="saveNote('hob-sub-3a')" placeholder="Type your answer in English here..." class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none h-16 bg-white"></textarea>
+                            </div>
+
+                            <div class="space-y-1.5">
+                                <label for="hob-sub-3b" class="block text-xs font-semibold text-slate-700">
+                                    <span class="block">3b. Question about Australian Food: What Australian food is your favorite food? For example, do you like Vegemite (what is it?)?</span>
+                                    <span class="block text-[11px] font-normal text-slate-500 mt-0.5">（日本語訳: オーストラリアの食べ物についての質問：オーストラリアの食べ物でどれが好きですか？例えばベンジマイト【どんな食べ物？】は好きですか？）</span>
+                                </label>
+                                <textarea id="hob-sub-3b" oninput="saveNote('hob-sub-3b')" placeholder="Type your answer in English here..." class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none h-16 bg-white"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Model Answers & Vocabulary Bank -->
+                    <div class="space-y-6">
+                        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2 border-b pb-2">
+                            <i class="fa-solid fa-lightbulb text-amber-500"></i>
+                            <span class="lang-en">Model Answers &amp; Useful Hints</span>
+                            <span class="lang-ja hidden">模範解答サンプルとヒント</span>
+                        </h3>
+
+                        <div class="bg-purple-50 border border-purple-200 rounded-xl p-4 text-xs space-y-4">
+                            <div>
+                                <strong class="text-purple-900 font-semibold block mb-1">Model Answer 1: Anime Recommendation</strong>
+                                <p class="text-slate-700 italic">"I strongly recommend 'Jujutsu Kaisen' or 'Demon Slayer'! The action scenes are incredible and Japanese teenagers love them."</p>
+                                <p class="text-slate-500 mt-1">（『呪術廻戦』や『鬼滅の刃』がおすすめです！アクションが凄くて高校生に大人気です。）</p>
+                            </div>
+
+                            <div class="border-t border-purple-200 pt-3">
+                                <strong class="text-purple-900 font-semibold block mb-1">Model Answer 2: Weekend &amp; Music</strong>
+                                <p class="text-slate-700 italic">"On weekends, I enjoy playing games and listening to YOASOBI or Mrs. GREEN APPLE. I also love going to the ocean with friends."</p>
+                                <p class="text-slate-500 mt-1">（週末はゲームをしたりYOASOBIなどを聴きます。友達と海に行くのも好きです。）</p>
+                            </div>
+
+                            <div class="border-t border-purple-200 pt-3">
+                                <strong class="text-purple-900 font-semibold block mb-1">Question Prompts for Burnside Students</strong>
+                                <p class="text-slate-700 italic">"Have you ever tried surfing on the Sunshine Coast? Do you like Tim Tam chocolate biscuits?"</p>
+                                <p class="text-slate-500 mt-1">（サンシャインコーストでサーフィンをしたことがありますか？ティムタムは好きですか？）</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-100 border rounded-xl p-4">
+                            <h4 class="font-bold text-slate-800 text-xs mb-2 flex items-center gap-1.5">
+                                <i class="fa-solid fa-book text-purple-600"></i>
+                                <span class="lang-en">Topic 3 Keywords &amp; Vocabulary</span>
+                                <span class="lang-ja hidden">趣味・カルチャー単語集</span>
+                            </h4>
+                            <div class="grid grid-cols-2 gap-2 text-xs">
+                                <div class="bg-white p-2 rounded border"><strong>Recommend:</strong> おすすめする</div>
+                                <div class="bg-white p-2 rounded border"><strong>Action-packed:</strong> アクション満載</div>
+                                <div class="bg-white p-2 rounded border"><strong>Surfing / Beach:</strong> サーフィン/海</div>
+                                <div class="bg-white p-2 rounded border"><strong>Tim Tam:</strong> 豪州の人気チョコ菓子</div>
+                                <div class="bg-white p-2 rounded border"><strong>Aussie Rules (AFL):</strong> 豪州独自のフットボール</div>
+                                <div class="bg-white p-2 rounded border"><strong>Native wildlife:</strong> 固有の野生動物</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CHEAT SHEET SECTION -->
+        <section id="content-cheatsheet" class="space-y-6 hidden">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-indigo-900 border-b pb-3 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-comments text-indigo-600"></i> 
+                    <span class="lang-en">Conversation Cheat Sheet &amp; Aussie Slang</span>
+                    <span class="lang-ja hidden">英会話即効フレーズ＆オーストラリアの表現</span>
+                </h2>
+
+                <div class="grid md:grid-cols-2 gap-6 text-sm">
+                    <div class="space-y-4">
+                        <div class="border rounded-xl p-4 bg-indigo-50/60 space-y-3">
+                            <h3 class="font-bold text-indigo-900 text-xs uppercase tracking-wide flex items-center gap-2">
+                                <i class="fa-solid fa-bolt text-amber-500"></i>
+                                <span class="lang-en">1. Natural Active Listening &amp; Reactions</span>
+                                <span class="lang-ja hidden">1. 自然な相づちとリアクション</span>
+                            </h3>
+                            
+                            <ul class="space-y-2 text-xs">
+                                <li class="bg-white p-2.5 rounded-lg border">
+                                    <strong class="text-indigo-900 block font-semibold">"That sounds so cool!" / "Awesome!"</strong>
+                                    <span class="text-slate-500">（すごく楽しそう！かっこいい！）</span>
+                                </li>
+                                <li class="bg-white p-2.5 rounded-lg border">
+                                    <strong class="text-indigo-900 block font-semibold">"Really? I didn't know that!"</strong>
+                                    <span class="text-slate-500">（本当ですか？知らなかったです！）</span>
+                                </li>
+                                <li class="bg-white p-2.5 rounded-lg border">
+                                    <strong class="text-indigo-900 block font-semibold">"That's very similar to Japan!" / "That's so unique!"</strong>
+                                    <span class="text-slate-500">（日本とそっくり！ / ユニークですね！）</span>
+                                </li>
+                                <li class="bg-white p-2.5 rounded-lg border">
+                                    <strong class="text-indigo-900 block font-semibold">"I agree with you!"</strong>
+                                    <span class="text-slate-500">（同感です！）</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="border rounded-xl p-4 bg-amber-50/60 space-y-3">
+                            <h3 class="font-bold text-amber-900 text-xs uppercase tracking-wide flex items-center gap-2">
+                                <i class="fa-solid fa-hand text-amber-600"></i>
+                                <span class="lang-en">2. Rescue Phrases when Stuck</span>
+                                <span class="lang-ja hidden">2. 言葉につまった時の助け舟フレーズ</span>
+                            </h3>
+
+                            <ul class="space-y-2 text-xs">
+                                <li class="bg-white p-2.5 rounded-lg border">
+                                    <strong class="text-amber-900 block font-semibold">"Could you speak a little slower, please?"</strong>
+                                    <span class="text-slate-500">（もう少しゆっくり話していただけますか？）</span>
+                                </li>
+                                <li class="bg-white p-2.5 rounded-lg border">
+                                    <strong class="text-amber-900 block font-semibold">"Sorry, what does that mean?"</strong>
+                                    <span class="text-slate-500">（すみません、それはどういう意味ですか？）</span>
+                                </li>
+                                <li class="bg-white p-2.5 rounded-lg border">
+                                    <strong class="text-amber-900 block font-semibold">"Let me check my worksheet!"</strong>
+                                    <span class="text-slate-500">（ワークシートのメモを確認させてください！）</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="border rounded-xl p-4 bg-emerald-50/60 space-y-3">
+                            <h3 class="font-bold text-emerald-900 text-xs uppercase tracking-wide flex items-center gap-2">
+                                <i class="fa-solid fa-sun text-emerald-600"></i>
+                                <span class="lang-en">3. Fun Aussie Expressions to Try</span>
+                                <span class="lang-ja hidden">3. 使ってみよう！オーストラリア独特のフレーズ</span>
+                            </h3>
+
+                            <ul class="space-y-2 text-xs">
+                                <li class="bg-white p-2.5 rounded-lg border">
+                                    <strong class="text-emerald-900 block font-semibold">"G'day!" (Good day!)</strong>
+                                    <span class="text-slate-500">（こんにちは！※豪州の定番の挨拶）</span>
+                                </li>
+                                <li class="bg-white p-2.5 rounded-lg border">
+                                    <strong class="text-emerald-900 block font-semibold">"No worries!"</strong>
+                                    <span class="text-slate-500">（どういたしまして！気にしないで！）</span>
+                                </li>
+                                <li class="bg-white p-2.5 rounded-lg border">
+                                    <strong class="text-emerald-900 block font-semibold">"Aussie" (pronounced "Ozzie")</strong>
+                                    <span class="text-slate-500">（オーストラリアの/オーストラリア人）</span>
+                                </li>
+                                <li class="bg-white p-2.5 rounded-lg border">
+                                    <strong class="text-emerald-900 block font-semibold">"Arvo" (Afternoon) / "Brekky" (Breakfast)</strong>
+                                    <span class="text-slate-500">（午後 / 朝食の省略語）</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Data Management & Reset -->
+                        <div class="border rounded-xl p-4 bg-slate-100 space-y-3">
+                            <h3 class="font-bold text-slate-800 text-xs flex items-center gap-2">
+                                <i class="fa-solid fa-database text-slate-600"></i>
+                                <span class="lang-en">Data Storage Settings</span>
+                                <span class="lang-ja hidden">データ管理</span>
+                            </h3>
+                            <p class="text-xs text-slate-600">
+                                <span class="lang-en">All text typed into this workbook is saved directly inside your browser.</span>
+                                <span class="lang-ja hidden">このアプリに入力したメモは端末のブラウザに自動保存されます。</span>
+                            </p>
+                            <button onclick="clearAllNotes()" class="text-xs bg-red-100 hover:bg-red-200 text-red-700 px-3 py-2 rounded-lg font-medium transition flex items-center gap-2">
+                                <i class="fa-solid fa-trash"></i> 
+                                <span class="lang-en">Reset All My Notes</span>
+                                <span class="lang-ja hidden">すべてのメモをリセット消去</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WORKSHEET PRINT PREVIEW SECTION -->
+        <section id="content-printview" class="space-y-6 hidden">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <div class="flex items-center justify-between border-b pb-4 mb-4 flex-wrap gap-2">
+                    <div>
+                        <h2 class="text-lg font-bold text-indigo-900 flex items-center gap-2">
+                            <i class="fa-solid fa-file-lines text-blue-600"></i>
+                            <span class="lang-en">Printable Group Worksheets (Topics 1, 2, &amp; 3)</span>
+                            <span class="lang-ja hidden">グループワーク用 印刷ワークシート (トピック1, 2, 3)</span>
+                        </h2>
+                        <p class="text-xs text-slate-500">
+                            <span class="lang-en">Click "Print All Worksheets" below to print or save as PDF for physical group discussions!</span>
+                            <span class="lang-ja hidden">「全ワークシートを印刷」を押すと、グループで手書きメモや音読ができる紙のプリントとして綺麗に印刷・PDF保存できます。</span>
+                        </p>
+                    </div>
+                    <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-4 py-2 rounded-lg font-bold transition flex items-center gap-2 shadow">
+                        <i class="fa-solid fa-print"></i>
+                        <span class="lang-en">Print All Worksheets</span>
+                        <span class="lang-ja hidden">全ワークシートを印刷</span>
+                    </button>
+                </div>
+
+                <!-- Live Printable Preview Container -->
+                <div class="print-container space-y-8">
+                    <!-- WORKSHEET 1 -->
+                    <div class="worksheet-page border p-6 rounded-xl bg-slate-50 space-y-4">
+                        <div class="border-b pb-3 flex justify-between items-start">
+                            <div>
+                                <span class="text-xs font-bold text-blue-600 uppercase tracking-widest">Cultural Exchange Worksheet #1</span>
+                                <h3 class="text-lg font-bold text-slate-900">Topic 1: Education System &amp; School Life</h3>
+                                <p class="text-xs text-slate-600">Meishu Gakuen Hitachi High School 🇯🇵 &amp; Burnside State High School 🇦🇺</p>
+                            </div>
+                            <div class="text-right text-xs text-slate-500">
+                                <p>Name: ______________________</p>
+                                <p class="mt-1">Class / Grade: _______________</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4 text-xs">
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-bold text-slate-800">1a. Daily Schedule &amp; Commute:</p>
+                                <p class="text-slate-600 mb-0.5">How do you travel to Meishu Hitachi (train, bus, bike)? What time does your day start and end?</p>
+                                <p class="text-[10px] text-slate-500 italic mb-2">（日本語訳: 明秀日立までどうやって通学していますか？【電車・バス・自転車など】何時始まりで何時終わりますか？）</p>
+                                <div id="print-preview-edu-1a" class="italic text-indigo-900 font-medium min-h-[40px] bg-slate-50 p-2 rounded border"></div>
+                            </div>
+
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-bold text-slate-800">1b. Classes &amp; Favorite Subject:</p>
+                                <p class="text-slate-600 mb-0.5">How many classes do you have each day? What is your favorite subject and why?</p>
+                                <p class="text-[10px] text-slate-500 italic mb-2">（日本語訳: 1日何コマ授業がありますか？一番好きな教科とその理由は何ですか？）</p>
+                                <div id="print-preview-edu-1b" class="italic text-indigo-900 font-medium min-h-[40px] bg-slate-50 p-2 rounded border"></div>
+                            </div>
+
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-bold text-slate-800">2a. Lunch Culture:</p>
+                                <p class="text-slate-600 mb-0.5">What do you eat for lunch at school (Bento, cafeteria, convenience store)? What do Australian students eat?</p>
+                                <p class="text-[10px] text-slate-500 italic mb-2">（日本語訳: お昼ご飯には何を食べますか【お弁当・学食・コンビニなど】？オーストラリアの生徒は何を食べていると思いますか？）</p>
+                                <div id="print-preview-edu-2a" class="italic text-indigo-900 font-medium min-h-[40px] bg-slate-50 p-2 rounded border"></div>
+                            </div>
+
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-bold text-slate-800">2b. Classroom Cleaning (Osoji):</p>
+                                <p class="text-slate-600 mb-0.5">How do Japanese students clean their own school (Osoji)? Did you know Australian schools hire cleaners?</p>
+                                <p class="text-[10px] text-slate-500 italic mb-2">（日本語訳: 日本の生徒が行う「掃除の時間」についてどう説明しますか？豪州では業者が清掃することを知っていましたか？）</p>
+                                <div id="print-preview-edu-2b" class="italic text-indigo-900 font-medium min-h-[40px] bg-slate-50 p-2 rounded border"></div>
+                            </div>
+
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-bold text-slate-800">3a. Club Activities (Bukatsu):</p>
+                                <p class="text-slate-600 mb-0.5">What club (Bukatsu) are you in at Meishu Hitachi? How often do you practice after school?</p>
+                                <p class="text-[10px] text-slate-500 italic mb-2">（日本語訳: 明秀日立で何部【部活動】に所属していますか？放課後どのくらい練習していますか？）</p>
+                                <div id="print-preview-edu-3a" class="italic text-indigo-900 font-medium min-h-[40px] bg-slate-50 p-2 rounded border"></div>
+                            </div>
+
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-bold text-slate-800">3b. Favorite School Events:</p>
+                                <p class="text-slate-600 mb-0.5">What is your favorite school event (e.g., Cultural Festival, Sports Festival)?</p>
+                                <p class="text-[10px] text-slate-500 italic mb-2">（日本語訳: 一番好きな学校行事【文化祭、体育祭など】は何ですか？）</p>
+                                <div id="print-preview-edu-3b" class="italic text-indigo-900 font-medium min-h-[40px] bg-slate-50 p-2 rounded border"></div>
+                            </div>
+
+                            <div class="border-t pt-2 mt-4 text-slate-500 text-[10px]">
+                                <p class="font-bold">Group Notes / Notes from Burnside Partner:</p>
+                                <div class="print-lines"></div>
+                                <div class="print-lines"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- WORKSHEET 2 -->
+                    <div class="worksheet-page border p-6 rounded-xl bg-slate-50 space-y-4">
+                        <div class="border-b pb-3 flex justify-between items-start">
+                            <div>
+                                <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Cultural Exchange Worksheet #2</span>
+                                <h3 class="text-lg font-bold text-slate-900">Topic 2: Environmental Awareness &amp; Ocean Protection</h3>
+                                <p class="text-xs text-slate-600">Meishu Gakuen Hitachi High School 🇯🇵 &amp; Burnside State High School 🇦🇺</p>
+                            </div>
+                            <div class="text-right text-xs text-slate-500">
+                                <p>Name: ______________________</p>
+                                <p class="mt-1">Class / Grade: _______________</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4 text-xs">
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-bold text-slate-800">1a. Waste Separation:</p>
+                                <p class="text-slate-600 mb-0.5">How do you separate trash at Meishu Hitachi or at home in Hitachi? (e.g. plastic, cans, burnables)</p>
+                                <p class="text-[10px] text-slate-500 italic mb-2">（日本語訳: 学校や日立市のご自宅でゴミをどのように分別していますか【プラ・缶・可燃ゴミなど】？）</p>
+                                <div id="print-preview-env-1a" class="italic text-indigo-900 font-medium min-h-[40px] bg-slate-50 p-2 rounded border"></div>
+                            </div>
+
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-bold text-slate-800">1b. Ocean &amp; Coast Cleanups:</p>
+                                <p class="text-slate-600 mb-0.5">Both Hitachi and Sunshine Coast have coastline. Have you ever joined a beach cleanup or picked up trash?</p>
+                                <p class="text-[10px] text-slate-500 italic mb-2">（日本語訳: 日立もサンシャインコーストも海岸線があります。海岸清掃やゴミ拾いをした経験はありますか？）</p>
+                                <div id="print-preview-env-1b" class="italic text-indigo-900 font-medium min-h-[40px] bg-slate-50 p-2 rounded border"></div>
+                            </div>
+
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-bold text-slate-800">2a. Personal Eco Habits:</p>
+                                <p class="text-slate-600 mb-0.5">What daily eco habits do you practice? (e.g. carrying "My Bottle", eco bags, saving electricity)</p>
+                                <p class="text-[10px] text-slate-500 italic mb-2">（日本語訳: 日常で行っているエコ習慣は何ですか【マイボトル、エコバッグ、節電など】？）</p>
+                                <div id="print-preview-env-2a" class="italic text-indigo-900 font-medium min-h-[40px] bg-slate-50 p-2 rounded border"></div>
+                            </div>
+
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-bold text-slate-800">2b. Question for Burnside Peers:</p>
+                                <p class="text-slate-600 mb-0.5">What do you ask Australian students about solar power or plastic bags in Queensland?</p>
+                                <p class="text-[10px] text-slate-500 italic mb-2">（日本語訳: オーストラリアの太陽光発電やレジ袋制限についてどんな質問をしてみたいですか？）</p>
+                                <div id="print-preview-env-2b" class="italic text-indigo-900 font-medium min-h-[40px] bg-slate-50 p-2 rounded border"></div>
+                            </div>
+
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-bold text-slate-800">3a. Explaining 'MOTTAINAI':</p>
+                                <p class="text-slate-600 mb-0.5">How would you explain the concept of "Mottainai" in simple English?</p>
+                                <p class="text-[10px] text-slate-500 italic mb-2">（日本語訳: 日本の「もったいない」という概念を簡単な英語でどう説明しますか？）</p>
+                                <div id="print-preview-env-3a" class="italic text-indigo-900 font-medium min-h-[40px] bg-slate-50 p-2 rounded border"></div>
+                            </div>
+
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-bold text-slate-800">3b. Personal Example of Mottainai:</p>
+                                <p class="text-slate-600 mb-0.5">Give a personal example of how you practice "Mottainai" (reusing things, not wasting food).</p>
+                                <p class="text-[10px] text-slate-500 italic mb-2">（日本語訳: 物を大切に使う、食べ残しをしないなど、あなたの「もったいない」の実践例を教えてください。）</p>
+                                <div id="print-preview-env-3b" class="italic text-indigo-900 font-medium min-h-[40px] bg-slate-50 p-2 rounded border"></div>
+                            </div>
+
+                            <div class="border-t pt-2 mt-4 text-slate-500 text-[10px]">
+                                <p class="font-bold">Group Notes / Notes from Burnside Partner:</p>
+                                <div class="print-lines"></div>
+                                <div class="print-lines"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- WORKSHEET 3 -->
+                    <div class="worksheet-page border p-6 rounded-xl bg-slate-50 space-y-4">
+                        <div class="border-b pb-3 flex justify-between items-start">
+                            <div>
+                                <span class="text-xs font-bold text-purple-600 uppercase tracking-widest">Cultural Exchange Worksheet #3</span>
+                                <h3 class="text-lg font-bold text-slate-900">Topic 3: Hobbies, Anime &amp; Teen Culture</h3>
+                                <p class="text-xs text-slate-600">Meishu Gakuen Hitachi High School 🇯🇵 &amp; Burnside State High School 🇦🇺</p>
+                            </div>
+                            <div class="text-right text-xs text-slate-500">
+                                <p>Name: ______________________</p>
+                                <p class="mt-1">Class / Grade: _______________</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4 text-xs">
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-bold text-slate-800">1a. Weekend &amp; Free Time Activities:</p>
+                                <p class="text-slate-600 mb-1">What do you do on weekends in Hitachi/Ibaraki?</p>
+                                <p class="text-[10px] text-slate-500 italic mb-2">（週末はどんなことをして過ごすのが好きですか？）</p>
+                                <div id="print-preview-hob-1a" class="italic text-indigo-900 font-medium min-h-[40px] bg-slate-50 p-2 rounded border"></div>
+                            </div>
+
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-bold text-slate-800">1b. Music &amp; J-Pop:</p>
+                                <p class="text-slate-600 mb-1">Who is your favorite Japanese music artist or band?</p>
+                                <p class="text-[10px] text-slate-500 italic mb-2">（一番よく聴く日本の音楽アーティストは誰ですか？）</p>
+                                <div id="print-preview-hob-1b" class="italic text-indigo-900 font-medium min-h-[40px] bg-slate-50 p-2 rounded border"></div>
+                            </div>
+
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-bold text-slate-800">2a. Anime / Manga Recommendation:</p>
+                                <p class="text-slate-600 mb-1">What anime or manga do you recommend to Burnside students?</p>
+                                <p class="text-[10px] text-slate-500 italic mb-2">（おすすめしたいアニメや漫画は何ですか？）</p>
+                                <div id="print-preview-hob-2a" class="italic text-indigo-900 font-medium min-h-[40px] bg-slate-50 p-2 rounded border"></div>
+                            </div>
+
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-bold text-slate-800">2b. Anime Story Brief:</p>
+                                <p class="text-slate-600 mb-1">Why do you like it? Briefly describe the plot.</p>
+                                <p class="text-[10px] text-slate-500 italic mb-2">（なぜその作品が好きですか？ストーリーの簡単な説明）</p>
+                                <div id="print-preview-hob-2b" class="italic text-indigo-900 font-medium min-h-[40px] bg-slate-50 p-2 rounded border"></div>
+                            </div>
+
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-bold text-slate-800">3a. Australian Icons &amp; Sports:</p>
+                                <p class="text-slate-600 mb-1">Australia is famous for Koalas, Kangaroos, Surfing, and Aussie Rules Football (AFL)? Which of these is your favorite, and why?</p>
+                                <p class="text-[10px] text-slate-500 italic mb-2">（コアラ、カンガルー、サーフィン、AFLの中でどれが好きでその理由は？）</p>
+                                <div id="print-preview-hob-3a" class="italic text-indigo-900 font-medium min-h-[40px] bg-slate-50 p-2 rounded border"></div>
+                            </div>
+
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-bold text-slate-800">3b. Australian Food &amp; Vegemite:</p>
+                                <p class="text-slate-600 mb-1">Question about Australian Food: What Australian food is your favorite food? For example, do you like Vegemite (what is it?)?</p>
+                                <p class="text-[10px] text-slate-500 italic mb-2">（豪州の食べ物でどれが好きですか？ベンジマイト【どんな食べ物？】は好きですか？）</p>
+                                <div id="print-preview-hob-3b" class="italic text-indigo-900 font-medium min-h-[40px] bg-slate-50 p-2 rounded border"></div>
+                            </div>
+
+                            <div class="border-t pt-2 mt-4 text-slate-500 text-[10px]">
+                                <p class="font-bold">Group Notes / Notes from Burnside Partner:</p>
+                                <div class="print-lines"></div>
+                                <div class="print-lines"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-800 text-slate-400 text-xs py-6 mt-12 border-t border-slate-700 no-print">
+        <div class="max-w-6xl mx-auto px-4 text-center space-y-2">
+            <p>Meishu Gakuen Hitachi High School 🇯🇵 &amp; Burnside State High School 🇦🇺 Cultural Exchange Program</p>
+            <p class="text-slate-500">Offline-Ready Interactive Prep Workbook &amp; Printable Worksheets</p>
+        </div>
+    </footer>
+
+    <script>
+        // Sub-question textarea IDs list
+        const ALL_NOTE_IDS = [
+            'edu-sub-1a', 'edu-sub-1b', 'edu-sub-2a', 'edu-sub-2b', 'edu-sub-3a', 'edu-sub-3b',
+            'env-sub-1a', 'env-sub-1b', 'env-sub-2a', 'env-sub-2b', 'env-sub-3a', 'env-sub-3b',
+            'hob-sub-1a', 'hob-sub-1b', 'hob-sub-2a', 'hob-sub-2b', 'hob-sub-3a', 'hob-sub-3b'
+        ];
+
+        let currentLang = 'en';
+
+        // Toggle Language Function
+        function toggleLanguage() {
+            if (currentLang === 'en') {
+                currentLang = 'ja';
+                document.querySelectorAll('.lang-en').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.lang-ja').forEach(el => el.classList.remove('hidden'));
+                document.getElementById('lang-btn-text').textContent = 'English に切り替え';
+            } else {
+                currentLang = 'en';
+                document.querySelectorAll('.lang-ja').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
+                document.getElementById('lang-btn-text').textContent = '日本語に切り替え';
+            }
+        }
+
+        // Switch Navigation Tabs
+        function switchTab(tabId) {
+            document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById('content-' + tabId).classList.remove('hidden');
+            document.getElementById('tab-' + tabId).classList.add('active');
+
+            if (tabId === 'printview') {
+                updatePrintPreviews();
+            }
+        }
+
+        // Save note to localStorage
+        function saveNote(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                localStorage.setItem('meishu_burnside_note_' + id, el.value);
+                showStatus(currentLang === 'en' ? 'Saved to device!' : '端末に保存されました！');
+                updatePrintPreviews();
+            }
+        }
+
+        // Save all notes
+        function saveAllNotes() {
+            ALL_NOTE_IDS.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    localStorage.setItem('meishu_burnside_note_' + id, el.value);
+                }
+            });
+            showStatus(currentLang === 'en' ? 'All notes successfully saved!' : 'すべてのメモが保存されました！');
+            updatePrintPreviews();
+        }
+
+        // Load saved notes
+        function loadAllNotes() {
+            ALL_NOTE_IDS.forEach(id => {
+                const savedVal = localStorage.getItem('meishu_burnside_note_' + id);
+                const el = document.getElementById(id);
+                if (savedVal && el) {
+                    el.value = savedVal;
+                }
+            });
+            updatePrintPreviews();
+        }
+
+        // Clear all notes
+        function clearAllNotes() {
+            const confirmMsg = currentLang === 'en' 
+                ? "Are you sure you want to delete all your prepared notes?" 
+                : "本当にすべてのメモを消去しますか？";
+            
+            if (confirm(confirmMsg)) {
+                ALL_NOTE_IDS.forEach(id => {
+                    localStorage.removeItem('meishu_burnside_note_' + id);
+                    const el = document.getElementById(id);
+                    if (el) el.value = '';
+                });
+                showStatus(currentLang === 'en' ? 'All notes deleted.' : 'すべてのメモが消去されました。');
+                updatePrintPreviews();
+            }
+        }
+
+        // Populate print previews with saved user text
+        function updatePrintPreviews() {
+            const mapping = {
+                'edu-sub-1a': 'print-preview-edu-1a',
+                'edu-sub-1b': 'print-preview-edu-1b',
+                'edu-sub-2a': 'print-preview-edu-2a',
+                'edu-sub-2b': 'print-preview-edu-2b',
+                'edu-sub-3a': 'print-preview-edu-3a',
+                'edu-sub-3b': 'print-preview-edu-3b',
+                'env-sub-1a': 'print-preview-env-1a',
+                'env-sub-1b': 'print-preview-env-1b',
+                'env-sub-2a': 'print-preview-env-2a',
+                'env-sub-2b': 'print-preview-env-2b',
+                'env-sub-3a': 'print-preview-env-3a',
+                'env-sub-3b': 'print-preview-env-3b',
+                'hob-sub-1a': 'print-preview-hob-1a',
+                'hob-sub-1b': 'print-preview-hob-1b',
+                'hob-sub-2a': 'print-preview-hob-2a',
+                'hob-sub-2b': 'print-preview-hob-2b',
+                'hob-sub-3a': 'print-preview-hob-3a',
+                'hob-sub-3b': 'print-preview-hob-3b',
+            };
+
+            for (const [inputId, previewId] of Object.entries(mapping)) {
+                const inputEl = document.getElementById(inputId);
+                const prevEl = document.getElementById(previewId);
+                if (inputEl && prevEl) {
+                    const text = inputEl.value.trim();
+                    prevEl.textContent = text !== '' ? text : '(Blank - Write notes here physically during group session)';
+                    if (text === '') {
+                        prevEl.classList.add('text-slate-400');
+                        prevEl.classList.remove('text-indigo-900');
+                    } else {
+                        prevEl.classList.remove('text-slate-400');
+                        prevEl.classList.add('text-indigo-900');
+                    }
+                }
+            }
+        }
+
+        // Trigger worksheet print
+        function triggerWorksheetPrint() {
+            switchTab('printview');
+            setTimeout(() => {
+                window.print();
+            }, 300);
+        }
+
+        // Status banner helper
+        let statusTimeout;
+        function showStatus(msg) {
+            const banner = document.getElementById('status-message');
+            const textEl = document.getElementById('status-text');
+            textEl.textContent = msg;
+            banner.classList.remove('hidden');
+
+            clearTimeout(statusTimeout);
+            statusTimeout = setTimeout(() => {
+                banner.classList.add('hidden');
+            }, 2500);
+        }
+
+        function dismissStatus() {
+            document.getElementById('status-message').classList.add('hidden');
+        }
+
+        // Initialization
+        window.onload = function() {
+            loadAllNotes();
+        };
+    </script>
+</body>
+</html>
